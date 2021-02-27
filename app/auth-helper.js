@@ -21,11 +21,6 @@ function getRandomState() {
   return key
 }
 
-function saveAccessInfo(acc) {
-  const tt = typeof acc === 'string' ? acc : JSON.stringify(acc)
-  localStorage.setItem('gh-acc', btoa(tt))
-}
-
 /** return {access_token, token_type, scope}  */
 function getAccessInfo () { 
   const acc = localStorage.getItem('gh-acc')

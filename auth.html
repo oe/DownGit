@@ -9,8 +9,11 @@ body {
 <body>
   <span id="result">loading...</span>
 </body>
-<script src="./app/auth-helper.js"></script>
 <script>
+  function saveAccessInfo(acc) {
+    const tt = typeof acc === 'string' ? acc : JSON.stringify(acc)
+    localStorage.setItem('gh-acc', btoa(tt))
+  }
   async function main () {
     const query = new URLSearchParams(location.search)
     const $result = document.getElementById('result')
