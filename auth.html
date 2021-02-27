@@ -37,7 +37,7 @@ body {
       
       if (result && result.access_token) {
         saveAccessInfo(result)
-        location.pathname = '/'
+        location.href = location.origin
         return
       }
       $result.innerHTML = `
