@@ -13,6 +13,11 @@ downGitModule.factory('downGitService', [
 
     function ($http, $q) {
         var repoInfo = {};
+        const access_token = getAccessToken();
+        const authHeader = {}
+        if (access_token) {
+            authHeader.Authorization = 'token ' + access_token;
+        }
 
         var parseInfo = function(parameters) {
             var repoPath = new URL(parameters.url).pathname;
@@ -65,29 +70,40 @@ downGitModule.factory('downGitService', [
         }
 
         var mapFileAndDirectory = function(dirPaths, files, requestedPromises, progress){
-            $http.get(repoInfo.urlPrefix+dirPaths.pop()+repoInfo.urlPostfix).then(function(response) {
-                for(var i=response.data.length-1; i>=0; i--){
-                    if(response.data[i].type=="dir"){
-                        dirPaths.push(response.data[i].path);
-
-                    } else{
-                        if(response.data[i].download_url){
-                            getFile(response.data[i].path,
-                                response.data[i].download_url,
-                                files, requestedPromises, progress
-                            );
-                        } else {
-                            console.log(response.data[i]);
-                        }
+            $http
+              .get(repoInfo.urlPrefix + dirPaths.pop() + repoInfo.urlPostfix, {
+                headers: authHeader
+              })
+              .then(function (response) {
+                for (var i = response.data.length - 1; i >= 0; i--) {
+                  if (response.data[i].type == 'dir') {
+                    dirPaths.push(response.data[i].path);
+                  } else {
+                    if (response.data[i].download_url) {
+                      getFile(
+                        response.data[i].path,
+                        response.data[i].download_url,
+                        files,
+                        requestedPromises,
+                        progress
+                      );
+                    } else {
+                      console.log(response.data[i]);
                     }
+                  }
                 }
 
-                if(dirPaths.length<=0){
-                    downloadFiles(files, requestedPromises, progress);
-                } else{
-                    mapFileAndDirectory(dirPaths, files, requestedPromises, progress);
+                if (dirPaths.length <= 0) {
+                  downloadFiles(files, requestedPromises, progress);
+                } else {
+                  mapFileAndDirectory(
+                    dirPaths,
+                    files,
+                    requestedPromises,
+                    progress
+                  );
                 }
-            });
+              });
         }
 
         var downloadFiles = function(files, requestedPromises, progress){
@@ -125,19 +141,26 @@ downGitModule.factory('downGitService', [
             progress.totalFiles.val = 1;
 
             var zip = new JSZip();
-            $http.get(url, {responseType: "arraybuffer"}).then(function (file) {
-                progress.downloadedFiles.val = 1;
-                zip.file(repoInfo.rootName, file.data);
+            $http
+              .get(url, { responseType: 'arraybuffer' })
+              .then(
+                function (file) {
+                  progress.downloadedFiles.val = 1;
+                  zip.file(repoInfo.rootName, file.data);
 
-                progress.isProcessing.val=false;
-                zip.generateAsync({type:"blob"}).then(function(content) {
-                    saveAs(content, repoInfo.downloadFileName+".zip");
-                });
-            }, function(error) {
-                console.log(error);
-                progress.isProcessing.val=false;
-                toastr.warning("Error! Server failure or wrong URL.", {iconClass: 'toast-down'});
-            });
+                  progress.isProcessing.val = false;
+                  zip.generateAsync({ type: 'blob' }).then(function (content) {
+                    saveAs(content, repoInfo.downloadFileName + '.zip');
+                  });
+                },
+                function (error) {
+                  console.log(error);
+                  progress.isProcessing.val = false;
+                  toastr.warning('Error! Server failure or wrong URL.', {
+                    iconClass: 'toast-down'
+                  });
+                }
+              );
         }
 
         return {
@@ -155,19 +178,41 @@ downGitModule.factory('downGitService', [
                     window.location = downloadUrl;
 
                 }else{
-                    $http.get(repoInfo.urlPrefix+repoInfo.resPath+repoInfo.urlPostfix).then(function(response) {
-                        if(response.data instanceof Array){
+                    $http
+                      .get(
+                        repoInfo.urlPrefix +
+                          repoInfo.resPath +
+                          repoInfo.urlPostfix,
+                        { headers: authHeader }
+                      )
+                      .then(
+                        function (response) {
+                          if (response.data instanceof Array) {
                             downloadDir(progress);
-                        }else{
-                            downloadFile(response.data.download_url, progress, toastr);
+                          } else {
+                            downloadFile(
+                              response.data.download_url,
+                              progress,
+                              toastr
+                            );
+                          }
+                        },
+                        function (error) {
+                          console.log('probable big file.');
+                          downloadFile(
+                            'https://raw.githubusercontent.com/' +
+                              repoInfo.author +
+                              '/' +
+                              repoInfo.repository +
+                              '/' +
+                              repoInfo.branch +
+                              '/' +
+                              repoInfo.resPath,
+                            progress,
+                            toastr
+                          );
                         }
-
-                    }, function(error) {
-                        console.log("probable big file.");
-                        downloadFile("https://raw.githubusercontent.com/"+repoInfo.author+"/"+
-                                repoInfo.repository+"/"+repoInfo.branch+"/"+repoInfo.resPath,
-                                progress, toastr);
-                    });
+                      );
                 }
             },
         };

@@ -1,0 +1,64 @@
+<style>
+body {
+  display: flex;
+  font-family: 'Courier New', Courier, monospace;
+  justify-content: center;
+  align-items: center;
+}
+</style>
+<body>
+  <span id="result">loading...</span>
+</body>
+<script src="./app/auth-helper.js"></script>
+<script src="//imgcache.qq.com/qcloud/cloudbase-js-sdk/1.4.0/cloudbase.full.js"></script>
+<script>
+  async function main () {
+    const query = new URLSearchParams(location.search)
+    const $result = document.getElementById('result')
+    if (query.get('error')) {
+      $result.innerHTML = `<b>Error</b><br>${query.get('error')}<br>${query.get('error_description')}`
+      return
+    }
+    const app = cloudbase.init({
+      env: "free-apps-service-2ebgexb97bfedd",
+    });
+    await app
+      .auth({
+        persistence: "session"
+      })
+      .anonymousAuthProvider()
+      .signIn()
+    
+    app.callFunction({
+      name: 'gh-auth',
+      data: {
+        appName: 'downGit',
+        code: query.get('code'),
+        state: localStorage.getItem('gh-salt')
+      }
+    })
+    .then(res => {
+      console.log('ss', res)
+      if (res.result && res.result.access_token) {
+        saveAccessInfo(res.result)
+        location.pathname = '/'
+        return
+      }
+      $result.innerHTML = `
+      <b>Error</b> <br>
+      failed to auth github ${res.result && res.result.error_description || ''}<br>
+      please <a href="/">back to home</a> and auth again
+      `
+      console.warn('auth failed', res.result)
+    })
+    .catch(err => {
+      $result.innerHTML = `
+      <b>Error</b> <br>
+      failed to auth github, it's likely to be a network issue<br>
+      please reload this page and try a gain
+      `
+      console.warn(err)
+    })
+  }
+  main()
+</script>

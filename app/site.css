@@ -56,5 +56,12 @@ a{
     background-color: #8c8c8c;
 }
 
-
+.gh-auth {
+    cursor: pointer;
+    color: #1890ff;
+    font-weight: bolder;
+    position: absolute;
+    top: 20px;
+    right: 20px
+}
 
