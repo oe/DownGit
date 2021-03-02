@@ -32,7 +32,6 @@ homeModule.config([
                     $scope.authStatus = {status: 'warning', message: 'loading'};
                     
                     getCurrentUser().then(res => {
-                        console.log('curr', res)
                         $scope.authStatus = res;
                         $scope.$digest();
                     })
