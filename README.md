@@ -1,4 +1,4 @@
-<h1> <img src="https://github.com/MinhasKamal/DownGit/raw/master/res/images/downgit.png" width="20" height=auto /> DownGit </h1>
+<h1> <img src="./res/images/downgit.png" width="20" height=auto /> DownGit </h1>
 
 #### Create GitHub Resource Download Link
 
@@ -6,7 +6,10 @@ With this tool you can directly download or create download link to any GitHub *
 
 ### Website
 
-[DownGit ↑](https://minhaskamal.github.io/DownGit)
+[DownGit ↑](https://downgit.evecalm.com/)
+
+#### Credits
+This web app was fork from [MinhasKamal](https://github.com/MinhasKamal/DownGit), I just added Github auth feature(so that this app could has much more github api request rate). Thanks to [MinhasKamal](https://github.com/MinhasKamal)
 
 ### How to Use?
 
