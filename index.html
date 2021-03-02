@@ -24,10 +24,14 @@
 <body>
     
     <div ng-view class=""></div>
-    <div class="gh-auth" id="gh-auth">Github Auth</div>
     
     <!------------------------------- SCRIPT ------------------------------>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"
+        integrity="sha512-jGR1T3dQerLCSm/IGEGbndPwzszJBlKQ5Br9vuB0Pw2iyxOy+7AK+lJcCC8eaXyz/9du+bkCy4HXxByhxkHf+w=="
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular-route.min.js"></script>
     <script src="lib/angular-toastr(2.0.0).tpls.min.js"></script>
@@ -39,5 +43,12 @@
     <script src="app/home/home.js"></script>
     <script src="app/home/down-git.js"></script>
     <script src="./app/index-auth.js"></script>
+    <script>
+        $(function () {
+            setTimeout(() => {
+                $('[data-tooltip="tooltip"]').tooltip()
+            }, 1000);
+        })
+    </script>
 </body>
 </html>

@@ -59,9 +59,8 @@ a{
 .gh-auth {
     cursor: pointer;
     color: #1890ff;
-    font-weight: bolder;
-    position: absolute;
-    top: 20px;
-    right: 20px
+    font-size: 1.2em;
+    margin-top: 10px;
+    /* right: 20px */
 }
 

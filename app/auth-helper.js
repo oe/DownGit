@@ -32,3 +32,26 @@ function getAccessToken () {
   const info = getAccessInfo()
   return info ? info.access_token : ''
 }
+
+function getCurrentUser() {
+  const acc = getAccessInfo()
+  if (!acc) return Promise.resolve({status: 'info', message: 'not auth yet'})
+  return fetch('https://api.github.com/user', {
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `token ${acc.access_token}`
+    }
+  }).then(res => {
+    if (res.status <= 304) return res.json();
+    return false
+  }).then(res => {
+    if (!res) return {status: 'danger', message: 'auth expired'}
+    return {
+      status: 'success',
+      message: `auth as ${res.login}: ${acc.scope ? 'public and private repos' : 'public repos only'}`
+    }
+  }).catch((err) => {
+    console.warn(err)
+    return {status: 'danger',  message: 'network error'}
+  })
+}

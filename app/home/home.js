@@ -29,6 +29,13 @@ homeModule.config([
                     $scope.isProcessing = {val: false};
                     $scope.downloadedFiles = {val: 0};
                     $scope.totalFiles = {val: 0};
+                    $scope.authStatus = {status: 'warning', message: 'loading'};
+                    
+                    getCurrentUser().then(res => {
+                        console.log('curr', res)
+                        $scope.authStatus = res;
+                        $scope.$digest();
+                    })
 
                     var templateUrl = "https?://github.com/.+/.+";
                     var downloadUrlInfix = "#/home?url=";
@@ -79,6 +86,10 @@ homeModule.config([
                         window.location = downloadUrlInfix+$scope.url;
                     };
 
+                    $scope.startAuth = function() {
+                        const scope = document.querySelector('input[name="scope"]:checked').value;
+                        location = getGithubAuthUrl(scope);
+                    }
                 }],
             });
     }
