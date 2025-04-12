@@ -27,6 +27,7 @@ body {
       state: localStorage.getItem('gh-salt')
     }
     try {
+      // check gh-auth-worker.js for serverside implement
       const result = await fetch('/gh-auth', {
         method: 'POST',
         headers: {
