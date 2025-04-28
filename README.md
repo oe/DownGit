@@ -9,7 +9,7 @@ With this tool you can directly download or create download link to any GitHub *
 [DownGit ↑](https://downgit.evecalm.com/)
 
 #### Credits
-This web app was fork from [MinhasKamal](https://github.com/MinhasKamal/DownGit), I just added Github auth feature(so that this app could has much more github api request rate). Thanks to [MinhasKamal](https://github.com/MinhasKamal)
+This web app was forked from [MinhasKamal](https://github.com/MinhasKamal/DownGit), I simply added Github auth feature(so that this app could has much more github api request rate). Thanks to [MinhasKamal](https://github.com/MinhasKamal)!
 
 **Github auth related code files**:
 * frontend auth helper: ./app/auth-helper.js
