@@ -45,18 +45,7 @@ homeModule.config([
                     }
 
                     if ($scope.url.match(templateUrl)) {
-                        var parameter = {
-                            url: $routeParams.url,
-                            fileName: $routeParams.fileName,
-                            rootDirectory: $routeParams.rootDirectory
-                        };
-                        var progress = {
-                            isProcessing: $scope.isProcessing,
-                            downloadedFiles: $scope.downloadedFiles,
-                            totalFiles: $scope.totalFiles
-                        };
-                        downGitService.downloadZippedFiles(parameter, progress, toastr);
-
+                        toastr.info("Ready to download. Click the button to start.", {iconClass: 'toast-down'});
                     } else if ($scope.url != "") {
                         toastr.warning("Invalid URL!", {iconClass: 'toast-down'});
                     }
@@ -82,7 +71,21 @@ homeModule.config([
                     };
 
                     $scope.download = function() {
-                        window.location = downloadUrlInfix+$scope.url;
+                        if ($scope.url.match(templateUrl)) {
+                            var parameter = {
+                                url: $scope.url,
+                                fileName: ($scope.url === $routeParams.url) ? $routeParams.fileName : "",
+                                rootDirectory: ($scope.url === $routeParams.url) ? $routeParams.rootDirectory : ""
+                            };
+                            var progress = {
+                                isProcessing: $scope.isProcessing,
+                                downloadedFiles: $scope.downloadedFiles,
+                                totalFiles: $scope.totalFiles
+                            };
+                            downGitService.downloadZippedFiles(parameter, progress, toastr);
+                        } else {
+                            toastr.warning("Invalid URL!", {iconClass: 'toast-down'});
+                        }
                     };
 
                     $scope.startAuth = function() {
